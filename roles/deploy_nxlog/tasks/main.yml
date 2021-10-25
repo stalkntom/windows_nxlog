@@ -1,0 +1,38 @@
+---
+  - name: Copy nxlog msi to Server
+    win_copy:
+      src: files/nxlog/{{ install_msi }}
+      dest: C:\Windows\Temp
+    when: state == "present"
+
+  - name: Copy nxlog gelf config
+    win_copy:
+      src: files/nxlog/nxlog_gelf.conf
+      dest: C:\Windows\Temp\nxlog\nxlog.conf
+    when: log_type == "gelf"
+
+  - name: Copy nxlog syslog config
+    win_copy:
+      src: files/nxlog/nxlog_syslog.conf
+      dest: C:\Windows\Temp\nxlog\nxlog.conf
+    when: log_type == "syslog"
+
+  - name: Install nxlog
+    win_package:
+      path: C:\Windows\Temp\nxlog\{{ install_msi }}
+      product_id: NXLog-CE
+      arguments: /qn
+      state: "{{ state }}"
+
+  - name: Copy config
+    win_copy:
+      src: C:\Windows\Temp\nxlog\nxlog.conf
+      dest: C:\Program Files (x86)\nxlog\conf\nxlog.conf
+      remote_src: yes
+    when: state == "present"
+
+  - name: Start Service
+    win_service:
+      name: nxlog
+      state: started
+    when: state == "present"
