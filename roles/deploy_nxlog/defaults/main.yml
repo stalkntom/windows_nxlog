@@ -1,3 +1,4 @@
 ---
 state: present
 log_type: gelf
+install_msi: nxlog-ce-2.11.2190.msi
