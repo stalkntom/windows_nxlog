@@ -1,2 +1,2 @@
 # windows_nxlog
-Deploy nxlog to Windows for Event forwarding
+Ansible role for deploying nxlog to Windows for Event forwarding
